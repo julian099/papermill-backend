@@ -4,31 +4,31 @@ const Utils = require('./../utils')
 const User = require('./../models/User')
 const path = require('path')
 
-// PUT - add favouriteHaircut --------------------------------------
-router.put('/addFavHaircut/', Utils.authenticateToken, (req, res) => {  
+// PUT - add favouriteDesign --------------------------------------
+router.put('/addFavDesign/', Utils.authenticateToken, (req, res) => {  
   // validate check
-  if(!req.body.haircutId){
+  if(!req.body.designId){
     return res.status(400).json({
-      message: "No haircut specified"
+      message: "No design specified"
     })
   }
-  // add haircutId to favouriteHaircuts field (array - push)
+  // add designId to favouriteDesigns field (array - push)
   User.updateOne({
     _id: req.user._id
   }, {
     $push: {
-      favouriteHaircuts: req.body.haircutId
+      favouriteDesigns: req.body.designId
     }
   })
     .then((user) => {            
       res.json({
-        message: "Haircut added to favourites"
+        message: "Design added to favourites"
       })
     })
     .catch(err => {
       console.log(err)
       res.status(500).json({
-        message: "Problem adding favourite haircut"
+        message: "Problem adding favourite design"
       })
     })
 })
@@ -41,7 +41,7 @@ router.get('/:id', Utils.authenticateToken, (req, res) => {
     })
   }
 
-  User.findById(req.params.id).populate('favouriteHaircuts')
+  User.findById(req.params.id).populate('favouriteDesigns')
     .then(user => {
       res.json(user)
     })
@@ -108,7 +108,7 @@ router.post('/', (req, res) => {
   .then(user => {
     if( user != null ){
       return res.status(400).json({
-        message: "email already in use, use different email address"
+        message: "email already in use, please try a different email address"
       })
     }
   // create new user       
@@ -128,5 +128,27 @@ router.post('/', (req, res) => {
     })
   })
 })
+
+
+// GET - get all users-----------------------------------------------------------------
+// endpoint: /designers
+router.get('/', (req, res) => {
+  // get all users from the user model, using the find() method
+  User.find()
+      .then((users) => {
+          res.json(users)
+      })
+      .catch((err) => {
+          console.log("problem getting users", err)
+      })
+})
+
+
+
+
+
+
+
+
 
 module.exports = router

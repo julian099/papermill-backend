@@ -42,9 +42,14 @@ app.use('/auth', authRouter)
 const userRouter = require('./routes/user')
 app.use('/user', userRouter)
 
-// haircut
-const haircutRouter = require('./routes/haircut')
-app.use('/haircut', haircutRouter)
+// design
+const designRouter = require('./routes/design')
+app.use('/design', designRouter)
+
+// all users
+const allUsersRouter = require('./routes/user')
+app.use('/allusers', allUsersRouter)
+
 
 
 // run app listen on port --------------------

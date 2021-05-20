@@ -35,8 +35,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  favouriteHaircuts: [
-    { type: Schema.ObjectId, ref: 'Haircut' }
+  favouriteDesigns: [
+    { type: Schema.ObjectId, ref: 'Design' }
   ]
 }, { timestamps: true })
 
