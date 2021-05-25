@@ -33,16 +33,14 @@ router.put('/addFavDesign/', Utils.authenticateToken, (req, res) => {
     })
 })
 
-// GET - get single user -------------------------------------------------------
-router.get('/:id', Utils.authenticateToken, (req, res) => {
-  if(req.user._id != req.params.id){
-    return res.status(401).json({
-      message: "Not authorised"
-    })
-  }
-
+// GET - get public profile user -------------------------------------------------------
+router.get('/public/:id', Utils.authenticateToken, (req, res) => {
+  // validation
+  if(!req.params.id) return res.status(404).json({mesage: "user id missing"})
+  
   User.findById(req.params.id).populate('favouriteDesigns')
     .then(user => {
+      delete user.password        
       res.json(user)
     })
     .catch(err => {
@@ -53,6 +51,7 @@ router.get('/:id', Utils.authenticateToken, (req, res) => {
       })
     })
 })
+
 
 
 // PUT - update user ---------------------------------------------
@@ -131,7 +130,7 @@ router.post('/', (req, res) => {
 
 
 // GET - get all users-----------------------------------------------------------------
-// endpoint: /designers
+
 router.get('/', (req, res) => {
   // get all users from the user model, using the find() method
   User.find()
@@ -145,7 +144,27 @@ router.get('/', (req, res) => {
 
 
 
+// GET - get single (private) user -----------
 
+router.get('/:id', Utils.authenticateToken, (req, res) => {
+  if(req.user._id != req.params.id){
+    return res.status(401).json({
+      message: "Not authorised"
+    })
+  }
+
+  User.findById(req.params.id).populate('favouriteDesigns')
+    .then(user => {
+      res.json(user)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        message: "Couldn't get user",
+        error: err
+      })
+    })
+})
 
 
 
