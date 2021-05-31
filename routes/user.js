@@ -3,6 +3,9 @@ const router = express.Router()
 const Utils = require('./../utils')
 const User = require('./../models/User')
 const path = require('path')
+const { mongo, isValidObjectId } = require('mongoose')
+const { assert } = require('console')
+const { collection } = require('./../models/User')
 
 // PUT - add favouriteDesign --------------------------------------
 router.put('/addFavDesign/', Utils.authenticateToken, (req, res) => {  
@@ -153,7 +156,14 @@ router.get('/:id', Utils.authenticateToken, (req, res) => {
     })
   }
 
-  User.findById(req.params.id).populate('favouriteDesigns')
+  User.findById(req.params.id).populate({ 
+    path: 'favouriteDesigns',
+    populate: {
+      path: 'user'
+      
+    } 
+ })
+
     .then(user => {
       res.json(user)
     })
@@ -165,8 +175,6 @@ router.get('/:id', Utils.authenticateToken, (req, res) => {
       })
     })
 })
-
-
 
 
 
